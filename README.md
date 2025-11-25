@@ -79,8 +79,6 @@ Artifacts included:
 - `screenshots/customer_landing_to_trusted_SQL_validation.png` 
 - `glue_jobs/customer_landing_to_trusted.py`
 
-## Next Steps
-
 ### Job #2 – accelerometer_landing_to_trusted
 
 This Glue Studio ETL job filters accelerometer data to include only readings from customers who agreed to share their data for research.
@@ -100,7 +98,7 @@ This Glue Studio ETL job filters accelerometer data to include only readings fro
 - Script: `glue_jobs/accelerometer_landing_to_trusted.py`
 - Screenshot: `screenshots/accelerometer_trusted.png`
 
-   
+## Next Steps
 
 ### Job #3 – step_trainer_landing_to_trusted
 - Filter step trainer data using customer_curated
