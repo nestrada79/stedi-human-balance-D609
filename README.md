@@ -56,49 +56,62 @@ Created and successfully executed Glue ETL job:
 ### `customer_landing_to_trusted`
 
 **Purpose:**  
-Filter customer records to include only those who agreed to share their data for research  
-(`shareWithResearchAsOfDate IS NOT NULL`).
+Filter customer records to include only those who agreed to share their data for research (`shareWithResearchAsOfDate IS NOT NULL`).
 
 **Implementation Highlights:**
 - Created in AWS Glue Studio (visual ETL).
-- Used SQL Query transform to filter the dataset.
-- Output written to the pre-created Data Catalog table `customer_trusted`.
-- IAM Role: `AWSGlueServiceRole`
+- Used a SQL Query transform to filter the dataset.
+- Wrote the sanitized output to the Data Catalog table `customer_trusted`.
+- IAM Role: `AWSGlueServiceRole`.
 
 **Validation in Athena:**
 
-```sql
-SELECT COUNT(*) FROM customer_trusted;
-```
+    SELECT COUNT(*) FROM customer_trusted;
 
-Result returned: **482** rows (correct)
+Result returned: **482** rows (correct).
 
-Artifacts included:
+**Artifacts Included:**
 - `screenshots/customer_landing_to_trusted_run.png`
 - `screenshots/customer_landing_to_trusted_ETL.png`
-- `screenshots/customer_landing_to_trusted_SQL_validation.png` 
+- `screenshots/customer_landing_to_trusted_SQL_validation.png`
 - `glue_jobs/customer_landing_to_trusted.py`
 
-### Job #2 – accelerometer_landing_to_trusted
+---
 
-This Glue Studio ETL job filters accelerometer data to include only readings from customers who agreed to share their data for research.
+### Trusted Zone – ETL Job #2 Complete
 
-**Process:**
-1. Load data from:
-   - `accelerometer_landing`
-   - `customer_trusted`
-2. Perform an inner join on:
-```accelerometer_landing.user = customer_trusted.email```
-3. Retain only accelerometer fields.
-4. Write the sanitized results to the `accelerometer_trusted` table in the Trusted Zone.
+### `accelerometer_landing_to_trusted`
 
-**Outputs:**
-- Trusted table: `accelerometer_trusted`
-- Row count verified in Athena: **40981**
-- Script: `glue_jobs/accelerometer_landing_to_trusted.py`
-- Screenshot: `screenshots/accelerometer_landing_to_trusted_ETL.png`
-- Screenshot: `screenshots/accelerometer_landing_to_trusted_run.png`
-- Screenshot: `screenshots/accelerometer_landing_to_trusted_SQL_validation.png`
+**Purpose:**  
+Filter accelerometer readings to include only data from customers who consented to share their information for research.
+
+**Implementation Highlights:**
+- Created in AWS Glue Studio (visual ETL).
+- Two source nodes:
+  - `accelerometer_landing`
+  - `customer_trusted`
+- A SQL Query transform performed the join:
+
+        SELECT myAccel.*
+        FROM myAccel
+        JOIN myCust
+            ON myAccel.user = myCust.email;
+
+- Retained only accelerometer fields in the output.
+- Wrote sanitized results to the `accelerometer_trusted` Data Catalog table.
+- IAM Role: `AWSGlueServiceRole`.
+
+**Validation in Athena:**
+
+    SELECT COUNT(*) FROM accelerometer_trusted;
+
+Result returned: **40981** rows (correct).
+
+**Artifacts Included:**
+- `screenshots/accelerometer_landing_to_trusted_run.png`
+- `screenshots/accelerometer_landing_to_trusted_ETL.png`
+- `screenshots/accelerometer_landing_to_trusted_SQL_validation.png`
+- `glue_jobs/accelerometer_landing_to_trusted.py`
 
 ## Next Steps
 
