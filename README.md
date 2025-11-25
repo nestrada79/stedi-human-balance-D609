@@ -74,7 +74,9 @@ SELECT COUNT(*) FROM customer_trusted;
 Result returned: **482** rows (correct)
 
 Artifacts included:
-- `screenshots/customer_trusted.png`
+- `screenshots/customer_landing_to_trusted_run.png`
+- `screenshots/customer_landing_to_trusted_ETL.png`
+- `screenshots/customer_landing_to_trusted_SQL_validation.png` 
 - `glue_jobs/customer_landing_to_trusted.py`
 
 ## Current Repository Structure
