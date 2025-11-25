@@ -96,7 +96,9 @@ This Glue Studio ETL job filters accelerometer data to include only readings fro
 - Trusted table: `accelerometer_trusted`
 - Row count verified in Athena: **40981**
 - Script: `glue_jobs/accelerometer_landing_to_trusted.py`
-- Screenshot: `screenshots/accelerometer_trusted.png`
+- Screenshot: `screenshots/accelerometer_landing_to_trusted_ETL.png`
+- Screenshot: `screenshots/accelerometer_landing_to_trusted_run.png`
+- Screenshot: `screenshots/accelerometer_landing_to_trusted_SQL_validation.png`
 
 ## Next Steps
 
@@ -117,8 +119,9 @@ All scripts and screenshots will be added as the project progresses.
 - Landing tables created in Athena  
 - Row counts validated for landing zone  
 - Trusted zone Job #1 completed  
-- Trusted table `customer_trusted` validated (482 rows)  
-- Glue script downloaded and included  
+- Table `customer_trusted` validated (482 rows)  
+- Glue script downloaded and included
+- Trusted zone Job #2 completed  
 
 ## Notes
 Work is performed in the Udacity-provided AWS account.  
