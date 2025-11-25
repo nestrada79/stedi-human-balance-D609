@@ -71,10 +71,10 @@ Filter customer records to include only those who agreed to share their data for
 Result returned: **482** rows (correct).
 
 **Artifacts Included:**
-- `screenshots/customer_landing_to_trusted_run.png`
-- `screenshots/customer_landing_to_trusted_ETL.png`
-- `screenshots/customer_landing_to_trusted_SQL_validation.png`
-- `glue_jobs/customer_landing_to_trusted.py`
+- `screenshots/customer_trusted_run.png`
+- `screenshots/customer_trusted_ETL.png`
+- `screenshots/customer_trusted.png`
+- `glue_jobs/customer_trusted.py`
 
 ---
 
@@ -108,9 +108,9 @@ Filter accelerometer readings to include only data from customers who consented 
 Result returned: **40981** rows (correct).
 
 **Artifacts Included:**
-- `screenshots/accelerometer_landing_to_trusted_run.png`
-- `screenshots/accelerometer_landing_to_trusted_ETL.png`
-- `screenshots/accelerometer_landing_to_trusted_SQL_validation.png`
+- `screenshots/accelerometer_trusted_run.png`
+- `screenshots/accelerometer_trusted_ETL.png`
+- `screenshots/accelerometer_trusted.png`
 - `glue_jobs/accelerometer_landing_to_trusted.py`
 
 ## Next Steps
@@ -134,7 +134,8 @@ All scripts and screenshots will be added as the project progresses.
 - Trusted zone Job #1 completed  
 - Table `customer_trusted` validated (482 rows)  
 - Glue script downloaded and included
-- Trusted zone Job #2 completed  
+- Trusted zone Job #2 completed
+- Landing tables DDL in landing_zone
 
 ## Notes
 Work is performed in the Udacity-provided AWS account.  
