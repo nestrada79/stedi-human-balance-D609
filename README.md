@@ -79,30 +79,28 @@ Artifacts included:
 - `screenshots/customer_landing_to_trusted_SQL_validation.png` 
 - `glue_jobs/customer_landing_to_trusted.py`
 
-## Current Repository Structure
-
-```
-/
-├── glue_jobs/
-│   └── customer_landing_to_trusted.py
-│
-├── screenshots/
-│   ├── customer_landing.png
-│   ├── accelerometer_landing.png
-│   ├── step_trainer_landing.png
-│   ├── customer_trusted.png
-│   ├── customer_landing_to_trusted_run.png
-│   └── customer_landing_to_trusted_diagram.png
-│
-├── README.md
-└── .gitignore
-```
-
 ## Next Steps
 
 ### Job #2 – accelerometer_landing_to_trusted
-- Join accelerometer_landing with customer_trusted (email = user)
-- Create accelerometer_trusted
+
+This Glue Studio ETL job filters accelerometer data to include only readings from customers who agreed to share their data for research.
+
+**Process:**
+1. Load data from:
+   - `accelerometer_landing`
+   - `customer_trusted`
+2. Perform an inner join on:
+```accelerometer_landing.user = customer_trusted.email```
+3. Retain only accelerometer fields.
+4. Write the sanitized results to the `accelerometer_trusted` table in the Trusted Zone.
+
+**Outputs:**
+- Trusted table: `accelerometer_trusted`
+- Row count verified in Athena: **40981**
+- Script: `glue_jobs/accelerometer_landing_to_trusted.py`
+- Screenshot: `screenshots/accelerometer_trusted.png`
+
+   
 
 ### Job #3 – step_trainer_landing_to_trusted
 - Filter step trainer data using customer_curated
