@@ -1,257 +1,128 @@
-# stedi-human-balance-D609
+# STEDI Human Balance Analytics – Data Lakehouse Project
 
-Repo for the code/data for the Udacity project required for WGU D609
-Natasha Estrada
+This repository contains my implementation of the STEDI Human Balance Analytics project using **AWS Glue**, **AWS S3**, **Athena**, and **PySpark**.  
+The objective of the project is to build a data lakehouse architecture that processes sensor, accelerometer, and customer data and prepares curated datasets for machine learning model development.
 
-STEDI Human Balance Analytics – Data Lakehouse Project
+## Project Status (Current Progress)
 
+### 1. Repository Setup
+- New GitHub repository created specifically for the STEDI project.
+- Added initial folder structure:
+  ```
+  glue_jobs/
+  landing_zone/
+  screenshots/
+  ```
+- Added `.gitignore` to exclude Python, Jupyter, and VS Code artifacts.
 
+### 2. AWS S3 Landing Zone Created
+A new S3 bucket was created:
 
-This repository contains my implementation of the STEDI Human Balance Analytics project using AWS Glue, AWS S3, Athena, and PySpark.
-
-The goal of the project is to build a data lakehouse architecture that processes sensor and customer data and prepares curated datasets for downstream machine learning.
-
-
-
-✅ Project Status (Current Progress)
-
-1\. Repository Setup
-
-
-
-Created a dedicated repository for the STEDI project.
-
-
-
-Added initial folder structure:
-
-
-
-glue\_jobs/
-
-landing\_zone/
-
-screenshots/
-
-
-
-
-
-Added a .gitignore appropriate for Python + Jupyter + VS Code.
-
-
-
-2\. AWS S3 Landing Zone Created
-
-
-
-Created bucket:
-
-
-
+```
 s3://stedi-d609-ne
+```
 
+With the required landing folders:
 
+```
+customer_landing/
+accelerometer_landing/
+step_trainer_landing/
+```
 
+Uploaded Udacity's JSON datasets into their corresponding folders.
 
+### 3. Landing Zone Tables in Athena/Glue Catalog
+Using AWS Athena, three landing tables were created with SQL DDL:
 
-with the required landing folders:
+- `customer_landing`
+- `accelerometer_landing`
+- `step_trainer_landing`
 
+Schemas were defined explicitly to match input JSON data.  
+All three tables were validated through row counts:
 
+| Table Name              | Expected Count | Actual Count |
+|-------------------------|----------------|--------------|
+| customer_landing        | 956            | 956          |
+| accelerometer_landing   | 81273          | 81273        |
+| step_trainer_landing    | 28680          | 28680        |
 
-customer\_landing/
+Screenshots stored in `screenshots/`.
 
-accelerometer\_landing/
+### 4. Trusted Zone – ETL Job #1 Complete
+Created and successfully executed Glue ETL job:
 
-step\_trainer\_landing/
+### `customer_landing_to_trusted`
 
+**Purpose:**  
+Filter customer records to include only those who agreed to share their data for research  
+(`shareWithResearchAsOfDate IS NOT NULL`).
 
+**Implementation Highlights:**
+- Created in AWS Glue Studio (visual ETL).
+- Used SQL Query transform to filter the dataset.
+- Output written to the pre-created Data Catalog table `customer_trusted`.
+- IAM Role: `AWSGlueServiceRole`
 
+**Validation in Athena:**
 
+```sql
+SELECT COUNT(*) FROM customer_trusted;
+```
 
-Uploaded the original JSON datasets from Udacity to each folder.
+Result returned: **482** rows (correct)
 
+Artifacts included:
+- `screenshots/customer_trusted.png`
+- `glue_jobs/customer_landing_to_trusted.py`
 
+## Current Repository Structure
 
-3\. Landing Zone Tables Created in Athena
-
-
-
-Using AWS Athena + Glue Data Catalog, manually created three external tables:
-
-
-
-customer\_landing
-
-
-
-accelerometer\_landing
-
-
-
-step\_trainer\_landing
-
-
-
-Each table was created using SQL DDL to correctly map schema and S3 locations.
-
-
-
-Landing row counts validated successfully:
-
-
-
-Table	Expected	Actual
-
-customer\_landing	956	956
-
-accelerometer\_landing	81273	81273
-
-step\_trainer\_landing	28680	28680
-
-
-
-Screenshots stored in screenshots/.
-
-
-
-4\. Trusted Zone: Job #1 Complete
-
-
-
-Created and successfully ran the first Glue ETL job:
-
-
-
-customer\_landing\_to\_trusted
-
-
-
-Purpose:
-
-
-
-Filter customer\_landing records to include only those who agreed to share data for research (shareWithResearchAsOfDate IS NOT NULL).
-
-
-
-Output written to the pre-created Glue Data Catalog table: customer\_trusted.
-
-
-
-The Glue job:
-
-
-
-Is built using Glue Studio (visual ETL).
-
-
-
-Uses a SQL Query transform for filtering.
-
-
-
-Uses the AWSGlueServiceRole IAM role.
-
-
-
-Result validation in Athena:
-
-SELECT COUNT(\*) FROM customer\_trusted;
-
-
-
-
-
-Count returned: 482 (correct)
-
-
-
-Screenshots + job script saved in:
-
-
-
-screenshots/customer\_trusted.png
-
-glue\_jobs/customer\_landing\_to\_trusted.py
-
-
-
-📁 Current Repository Structure
-
+```
 /
-
-├── glue\_jobs/
-
-│   └── customer\_landing\_to\_trusted.py
-
+├── glue_jobs/
+│   └── customer_landing_to_trusted.py
 │
-
 ├── screenshots/
-
-│   ├── customer\_landing.png
-
-│   ├── accelerometer\_landing.png
-
-│   ├── step\_trainer\_landing.png
-
-│   ├── customer\_trusted.png
-
-│   ├── customer\_landing\_to\_trusted\_run.png
-
-│   └── customer\_landing\_to\_trusted\_diagram.png
-
+│   ├── customer_landing.png
+│   ├── accelerometer_landing.png
+│   ├── step_trainer_landing.png
+│   ├── customer_trusted.png
+│   ├── customer_landing_to_trusted_run.png
+│   └── customer_landing_to_trusted_diagram.png
 │
-
 ├── README.md
-
 └── .gitignore
+```
 
+## Next Steps
 
+### Job #2 – accelerometer_landing_to_trusted
+- Join accelerometer_landing with customer_trusted (email = user)
+- Create accelerometer_trusted
 
-🔜 Next Steps
+### Job #3 – step_trainer_landing_to_trusted
+- Filter step trainer data using customer_curated
 
+### Job #4 – customer_trusted_to_curated
+- Include only customers who have accelerometer Trusted Zone data
 
+### Job #5 – machine_learning_curated
+- Join accelerometer_trusted + step_trainer_trusted by timestamp
+- Produce final curated dataset for ML
 
-These are the upcoming ETL tasks:
+All scripts and screenshots will be added as the project progresses.
 
+## Submission Requirements Covered So Far
+- Landing zone created in S3  
+- Landing tables created in Athena  
+- Row counts validated for landing zone  
+- Trusted zone Job #1 completed  
+- Trusted table `customer_trusted` validated (482 rows)  
+- Glue script downloaded and included  
 
-
-Job #2: accelerometer\_landing\_to\_trusted
-
-
-
-Join accelerometer\_landing with customer\_trusted
-
-
-
-Create accelerometer\_trusted
-
-
-
-Job #3: step\_trainer\_landing\_to\_trusted
-
-
-
-Filter step trainer data using customer\_curated
-
-
-
-Job #4: customer\_trusted\_to\_curated
-
-
-
-Identify customers who have accelerometer data
-
-
-
-Job #5: machine\_learning\_curated
-
-
-
-Join step trainer + accelerometer data into final training dataset
-
-
-
-Everything will be added to GitHub as the project progresses.
-
+## Notes
+Work is performed in the Udacity-provided AWS account.  
+All ETL jobs will use the `AWSGlueServiceRole` IAM role.  
+Data Catalog tables are pre-created in Athena to ensure stable Glue behavior.
