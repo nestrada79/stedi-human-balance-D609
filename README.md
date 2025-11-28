@@ -160,11 +160,44 @@ SELECT COUNT(*) FROM customer_curated;
 
 ## Next Steps
 
-### Job #3 – step_trainer_landing_to_trusted
-- Filter step trainer data using customer_curated
+## 6. Trusted Zone – ETL Job #3  
+### `step_trainer_landing_to_trusted`
 
-### Job #4 – customer_trusted_to_curated
-- Include only customers who have accelerometer Trusted Zone data
+**Purpose**  
+Filter Step Trainer IoT data to include only devices belonging to customers who:
+- agreed to share their data
+- appear in `customer_curated`
+
+**Implementation**  
+- Visual ETL in AWS Glue Studio  
+- Inputs:
+  - `step_trainer_landing` (alias: stepdata)
+  - `customer_curated` (alias: cust)
+- SQL Transform:
+  ```sql
+  SELECT stepdata.*
+  FROM stepdata
+  WHERE stepdata.serialnumber IN (
+      SELECT serialnumber
+      FROM cust
+  );
+  ```
+- Output target: Glue Catalog table `step_trainer_trusted` (Parquet)
+
+**Validation in Athena**
+```sql
+SELECT COUNT(*) FROM step_trainer_trusted;
+```
+
+**Result:**  
+`14460` rows ✔
+
+**Artifacts**  
+- Script: `glue_jobs/step_trainer_landing_to_trusted.py`
+- `screenshots/step_trainer_landing_to_trusted_ETL.png`
+- `screenshots/step_trainer_landing_to_trusted_run.png`
+- `screenshots/step_trainer_trusted_query.png`
+
 
 ### Job #5 – machine_learning_curated
 - Join accelerometer_trusted + step_trainer_trusted by timestamp
