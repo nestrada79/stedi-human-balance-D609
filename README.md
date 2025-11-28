@@ -199,21 +199,50 @@ SELECT COUNT(*) FROM step_trainer_trusted;
 - `screenshots/step_trainer_trusted_query.png`
 
 
-### Job #5 – machine_learning_curated
-- Join accelerometer_trusted + step_trainer_trusted by timestamp
-- Produce final curated dataset for ML
+## 7. Curated Zone – ETL Job #2  
+### `machine_learning_curated`
 
-All scripts and screenshots will be added as the project progresses.
+This ETL job creates the final curated dataset used by Data Scientists to train the STEDI step-detection machine learning model. It joins timestamp-aligned accelerometer readings with the corresponding Step Trainer IoT sensor data.
 
-## Submission Requirements Covered So Far
-- Landing zone created in S3  
-- Landing tables created in Athena  
-- Row counts validated for landing zone  
-- Trusted zone Job #1 completed  
-- Table `customer_trusted` validated (482 rows)  
-- Glue script downloaded and included
-- Trusted zone Job #2 completed
-- Landing tables DDL in landing_zone
+### **Purpose**
+Combine:
+- `accelerometer_trusted`  
+- `step_trainer_trusted`
+
+using matching timestamps to produce a unified, feature-rich dataset for supervised machine learning.
+
+### **Implementation**
+- Built using AWS Glue Studio (Visual ETL).
+- Input sources:
+  - `accelerometer_trusted` (alias: accel)
+  - `step_trainer_trusted` (alias: trainer)
+- SQL Transform:
+  ```sql
+  SELECT
+      accel.*,
+      trainer.distanceFromObject,
+      trainer.sensorReadingTime
+  FROM accel
+  JOIN trainer
+      ON accel.timestamp = trainer.sensorReadingTime;
+  ```
+- Output target:
+  - Glue Catalog table: `machine_learning_curated`
+  - Format: Parquet
+
+### **Validation in Athena**
+Query:
+```sql
+SELECT COUNT(*) FROM machine_learning_curated;
+```
+
+**Result: 43,681 rows** ✔ (matches rubric)
+
+### **Artifacts**
+- Script: `glue_jobs/machine_learning_curated.py`
+- `screenshots/machine_learning_curated_ETL.png`
+- `screenshots/machine_learning_curated_run.png`
+- `screenshots/machine_learning_curated_query.png`
 
 ## Notes
 Work is performed in the Udacity-provided AWS account.  
