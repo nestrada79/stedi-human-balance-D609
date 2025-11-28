@@ -113,6 +113,51 @@ Result returned: **40981** rows (correct).
 - `screenshots/accelerometer_trusted.png`
 - `glue_jobs/accelerometer_landing_to_trusted.py`
 
+
+### Curated Zone – ETL Job #1 Complete  
+
+### `customer_trusted_to_curated`
+
+This ETL job produces the curated customer dataset. The goal is to ensure that **only customers who shared their data for research AND have accelerometer activity** are retained for downstream machine learning joins.
+
+### **Purpose**
+Create the curated customer table (`customer_curated`) by joining:
+- `customer_trusted`  
+- `accelerometer_trusted`  
+
+Customers are included **only if** their email appears in the accelerometer_trusted dataset.
+
+### **Implementation Details**
+- Built using AWS Glue Studio (Visual ETL).
+- Data Sources:
+  - `customer_trusted` → alias `customer`
+  - `accelerometer_trusted` → alias `accel`
+- SQL Transform:
+  ```sql
+  SELECT DISTINCT customer.*
+  FROM customer
+  JOIN accel
+      ON customer.email = accel.user;
+  ```
+  `DISTINCT` ensures only unique customers are retained (482 expected).
+
+- Target: AWS Glue Data Catalog → table `customer_curated`
+- Format: Parquet
+- IAM Role: `AWSGlueServiceRole`
+
+### **Validation in Athena**
+```
+SELECT COUNT(*) FROM customer_curated;
+```
+
+**Result: 482 rows** ✔ (matches rubric)
+
+### **Artifacts Included**
+- Script: `glue_jobs/customer_trusted_to_curated.py`
+- `screenshots/customer_curated.png`
+- `screenshots/customer_curated_ETL.png`
+- `screenshots/customer_curated_run.png`
+
 ## Next Steps
 
 ### Job #3 – step_trainer_landing_to_trusted
